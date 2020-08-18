@@ -89,9 +89,91 @@ article {
   float: left;
   padding: 20px;
   width: 85%;
-  background-color: #808080;
+  background-color: #171819;
   height: 880px; 
+  color: #ffffff;
   
+}
+
+.dropbtn {
+  border:0;
+  background: none;
+  display: block;
+  margin: 20px auto;
+  border: 2px solid #00FFFF;
+  padding: 14px 10px;
+  width: 220px;
+  outline: none;
+  color: white;
+  border-radius: 24px;
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  width: 258px;
+  border-color: #2ecc71;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #808080;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px #000000;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #2ecc71;}
+
+.show {display: block;}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+.column button[id="search"]{
+  border:0;
+  background: none;
+  display: block;
+  margin-top: 50px auto;
+  border: 2px solid #2ecc71;
+  padding: 14px 10px;
+  width: 500px;
+  outline: none;
+  color: white;
+  border-radius: 24px;
+  transition: 0.25s;
+}
+
+.column button[id="search"]:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.column button[id="search"]:hover {
+  background-color: #2ecc71;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 section:after {
@@ -99,6 +181,27 @@ section:after {
   display: table;
   clear: both;
 }
+
+#lboard {
+  color: white;
+  position: center;
+}
+
+#lblist {
+  color: white;
+  position: center;
+}
+
+/*ul li:nth-child(1){
+  list-style-image:url('gold.png');
+  }
+  ul li:nth-child(2){
+  list-style-image:url('silver.png');
+  }
+  ul li:nth-child(3){
+  list-style-image:url('bronze.png');
+  }*/
+
 
 footer {
     color: white;
