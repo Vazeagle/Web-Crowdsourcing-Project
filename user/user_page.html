@@ -22,71 +22,63 @@
 			  <p>Sign up Period Coverage:</p>
 			  <p>File last uploaded at:</p>
 			  <button id="upload">Upload .json File </button>
-			  <table>
-				<thead>
-					<tr>
-						<th colspan="2"> Leaderboard</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<th> 1)  </th>
-						<td>Golden user</td>
-					</tr>
-					<tr>
-						<th>2)</th>
-						<td>Silver user</td>
-					</tr>
-					<tr>
-						<th>3)</th>
-						<td>Bronzas</td>
-					</tr>
-					</tbody>
-			</table>
+			  <h3 id="lboard"> <b>Leaderboard</b> </h3>
+						<ul id="lblist">
+							<li>Gold</li>
+							<li>Silver</li>
+							<li>Bronze</li>
+						  </ul>
 		</div>
     </ul>
   </nav>
 
   
   <article>
-	<h2>This is your activity in the last month.</h2>
-	<h3>Sort the map's results by:</h3>
+	<div class="row">
+		<div class="column">
+			<h2>This is your activity in the last month.</h2>
+			<div  id='map'> </div>
+	
+			<script src="usr_function.js"> </script>
 
-	<div class="dropdown">
-		<button class="dropbtn">Year</button>
-		<div class="dropdown-content">
-		<a href="#">All</a>
-		<a href="#">2020</a>
-		<a href="#">2019</a>
-		<a href="#">2018</a>
 		</div>
-	</div>
+		<div class="column">
+			<h3>Sort the map's results by:</h3>
+
+			<div class="dropdown">
+				<button onclick="YearFunction()" class="dropbtn">Year</button>
+				<div id="Yeardbtn" class="dropdown-content">
+					<a href="#">All</a>
+					<a href="#">2020</a>
+					<a href="#">2019</a>
+					<a href="#">2018</a>
+				</div>
+			</div>
 
 	<p>Month</p>
 
 	<div class="btn-group">
 		<div class="dropdown">
-			<button class="dropbtn">Starting Month</button>
-			<div class="dropdown-content">
-			<a href="#">All</a>
-			<a href="#">January</a>
-			<a href="#">February</a>
-			<a href="#">March</a>
-			<a href="#">April</a>
-			<a href="#">May</a>
-			<a href="#">June</a>
-			<a href="#">July</a>
-			<a href="#">August</a>
-			<a href="#">September</a>
-			<a href="#">October</a>
-			<a href="#">November</a>
-			<a href="#">December</a>
+			<button onclick="SMonthFunction()" class="dropbtn">Starting Month</button>
+			<div id="Smonthdbtn" class="dropdown-content">
+				<a href="#">All</a>
+				<a href="#">January</a>
+				<a href="#">February</a>
+				<a href="#">March</a>
+				<a href="#">April</a>
+				<a href="#">May</a>
+				<a href="#">June</a>
+				<a href="#">July</a>
+				<a href="#">August</a>
+				<a href="#">September</a>
+				<a href="#">October</a>
+				<a href="#">November</a>
+				<a href="#">December</a>
 			</div>
 		</div>
-		<p>-</p>
 		<div class="dropdown">
-			<button class="dropbtn">Ending Month</button>
-			<div class="dropdown-content">
+			<button onclick="EMonthFunction()" class="dropbtn">Ending Month</button>
+			<div id="Emonthdbtn" class="dropdown-content">
 				<a href="#">All</a>
 				<a href="#">January</a>
 				<a href="#">February</a>
@@ -106,8 +98,8 @@
 	<p>Day</p>
 	<div class="btn-group">
 		<div class="dropdown">
-			<button class="dropbtn">Starting Day</button>
-			<div class="dropdown-content">
+			<button onclick="SDayFunction()" class="dropbtn">Starting Day</button>
+			<div id="Sdaydbtn" class="dropdown-content">
 				<a href="#">All</a>
 				<a href="#">Monday</a>
 				<a href="#">Tuesday</a>
@@ -118,10 +110,9 @@
 				<a href="#">Sunday</a>
 			</div>
 		</div>
-		<p>-</p>
 		<div class="dropdown">
-			<button class="dropbtn">Ending Day</button>
-			<div class="dropdown-content">
+			<button onclick="EDayFunction()" class="dropbtn">Ending Day</button>
+			<div id="Edaydbtn" class="dropdown-content">
 				<a href="#">All</a>
 				<a href="#">Monday</a>
 				<a href="#">Tuesday</a>
@@ -133,11 +124,11 @@
 			</div>
 		</div>
 	</div>
-	<p>Time</p>	
+	<p>Time</p>
 	<div class="btn-group">
 		<div class="dropdown">
-			<button class="dropbtn">Starting Time</button>
-			<div class="dropdown-content">
+			<button onclick="STimeFunction()" class="dropbtn">Starting Time</button>
+			<div id="STimedbtn" class="dropdown-content">
 				<a href="#">All</a>
 				<a href="#">00:00</a>
 				<a href="#">01:00</a>
@@ -165,10 +156,9 @@
 				<a href="#">23:00</a>
 			</div>
 		</div>
-	<p>-</p>
 		<div class="dropdown">
-			<button class="dropbtn">Ending Time</button>
-			<div class="dropdown-content">
+			<button onclick="ETimeFunction()" class="dropbtn">Ending Time</button>
+			<div id="ETimedbtn" class="dropdown-content">
 				<a href="#">All</a>
 				<a href="#">00:00</a>
 				<a href="#">01:00</a>
@@ -198,21 +188,19 @@
 		</div>
 	</div>
 	<div class="dropdown">
-		<button class="dropbtn">Activity</button>
-		<div class="dropdown-content">
-		<a href="#">All</a>
-		<a href="#">WALKING</a>
-		<a href="#">STILL</a>
+		<button onclick="ActivFunction()" class="dropbtn">Activity</button>
+		<div id="Activdbtn" class="dropdown-content">
+				<a href="#">All</a>
+				<a href="#">WALKING</a>
+				<a href="#">STILL</a>
 		</div>
 	</div>
-	
-	<div  id='map'> </div>
+
+	<button id="search">Search </button>
 	
 	<script src="usr_function.js"> </script>
-
-	
-	
   </article>
+  
 </section>
 
 
