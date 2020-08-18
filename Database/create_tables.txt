@@ -5,6 +5,7 @@ CREATE TABLE "user" (
 	"email"		TEXT NOT NULL,
 	"reg_date" 	DATETIME NOT NULL,
 	"role"		ENUM('admin','user'),
+	"ecoscore"	INT DEFAULT 0
 	"verified_user" ENUM('yes','no'),
 	PRIMARY KEY("userID")
 );
@@ -16,6 +17,7 @@ CREATE TABLE "user_copy" (
 	"email_copy"	TEXT NOT NULL,
 	"reg_date_copy" DATETIME,
 	"role_copy"		ENUM('admin','user'),
+	"ecoscore"		INT DEFAULT 0
 	"verified_user_copy" ENUM('yes','no'),
 );
 
@@ -29,30 +31,41 @@ CREATE TABLE "logs"(
 
 CREATE TABLE "upload_num"(
 	"userID"		TEXT NOT NULL,
-	"data_count"	INT	NOT NULL DEFAULT 0,
+	"data_count"	INT	NOT NULL DEFAULT 0, --POSA ARXEIA EXEI ANEBASEI 8A AUXANETAI ME BASH TA ARXEIA POU ANEBAZEI
 	CONSTRAINT upInfo
 	FOREIGN KEY("userID") REFERENCES user("userID")
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "location"(
+CREATE TABLE "map_data"(
 	"userID"		TEXT NOT NULL,
-	"dataID"		INT NOT NULL DEFAULT 0,
-	"locationID"		INT NOT NULL DEFAULT 0,
+	"dataID"		INT NOT NULL, -- ID TOU ARXEIOU POU ANEBAZEI  to dataID 8a auxanetai ana 1 ana upload
+	"uploadDate"	DATETIME NOT NULL, --8a ginetai update molis arxisei upload enos json
+	"fileName"		TEXT NOT NULL,
+	PRIMARY KEY ("userID","dataID"),
+	CONSTRAINT usrdata
+	FOREIGN KEY("userID") REFERENCES user("userID")
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE "locations"(
+	"userID"		TEXT NOT NULL,
+	"dataID"		INT NOT NULL, -- ID TOU ARXEIOU POU ANEBAZEI
+	"locationID"		INT NOT NULL, -- TO ID THS KA8E TOPOUESIAS POY YPARXEI MESA STO SYGKEKRIMENO ARXEIO POU ANEBAZEI
 	"timestampMs"		BIGINT NOT NULL,
 	"latitudeE7"		BIGINT NOT NULL,
 	"longitudeE7"		BIGINT NOT NULL,
 	"velocity"		INT NOT NULL,
 	"accuracy"		INT NOT NULL,
 	"heading"		INT NOT NULL,
-	"uploadDate"		DATETIME NOT NULL, --8a ginetai update molis arxisei upload enos json
 	PRIMARY KEY ("userID","dataID","locationID"),
-	CONSTRAINT uplDate
-	FOREIGN KEY("uploadDate") REFERENCES upload_log("date")
-	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT usrIDtoUser
-	FOREIGN KEY("userID") REFERENCES user("userID")
-	ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY("userID") REFERENCES map_data("userID")
+	ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT file_data_ID
+	FOREIGN KEY ("dataID") REFERENCES map_data("dataID")
+	ON DELETE CASCADE ON UPDATE CASCADE,
 );
 
 
@@ -65,19 +78,16 @@ CREATE TABLE activity(
 	"confidence"		INT(3) NOT NULL DEFAULT 0,
 	"timestampMs"		BIGINT NOT NULL,
 	"father_activity"	INT NULL,
-	"uploadDate"		DATETIME NOT NULL, --8a ginetai update molis arxisei upload enos json
-	PRIMARY KEY ("userID","dataID","locationID","activityID"),
-	CONSTRAINT uploadDateTime
-	FOREIGN KEY("uploadDate") REFERENCES upload_log("date")		
+	"sub_activityID"	INT NULL DEFAULT 0,	--gIA NA XRISIMOPOIH8EI GIA SYGKEKRIMENO KEY OTAN 8ELEI NA KALESEI ENA ACTIVITY ISWS NA MHN XREIAZETAI
+	PRIMARY KEY ("userID","dataID","locationID","activityID","sub_activityID"),
+	CONSTRAINT userIDtomapData
+	FOREIGN KEY ("userID") REFERENCES map_data("userID")
 	ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT userIDtoUSER
-	FOREIGN KEY ("userID") REFERENCES user("userID")
-	ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT dataIDtoLoc
-	FOREIGN KEY (dataID) REFERENCES location(dataID)
+	CONSTRAINT dataIDtoMapdata
+	FOREIGN KEY (dataID) REFERENCES map_data(dataID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT locIDtoLoc
-	FOREIGN KEY (locationID) REFERENCES location(locationID)
+	FOREIGN KEY (locationID) REFERENCES locations(locationID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT arxikoActivityToActivity
 	FOREIGN KEY ("userID","dataID","locationID","father_activity") REFERENCES activity("userID","dataID","locationID","activityID")
@@ -96,15 +106,6 @@ CREATE TABLE activity_copy(
 	"uploadDate"		DATETIME NOT NULL
 );
 
-CREATE TABLE "upload_log"( --EMPERIEXEI TO UPLOAD INFO GENIKA TOU XRHSTH KAI META 8A KANEI SELECT KAI EPANALHPTIKA APO PHP 8A BAZEI TO DATE AUTO STO LOC KAI STO ACTIVITY
-	"userID"	TEXT NOT NULL,
-	"date"		DATETIME NOT NULL,
-	"fileName"	TEXT NOT NULL,
-	PRIMARY KEY ("userID"),
-	CONSTRAINT upLogInfo
-	FOREIGN KEY("userID") REFERENCES user("userID")
-	ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 
 CREATE TABLE history(
@@ -114,5 +115,4 @@ CREATE TABLE history(
 	"type"		ENUM('insert', 'update', 'delete'),
 	"tableName"	VARCHAR(15)
 );
-
 
