@@ -69,17 +69,14 @@ CREATE TABLE "locations"(
 );
 
 
-CREATE TABLE activity(
+CREATE TABLE "activity"(
 	"userID"		TEXT NOT NULL,
 	"dataID"		INT NOT NULL,
 	"locationID"		INT NOT NULL,
 	"activityID"		INT NOT NULL,
-	"activityType"		ENUM('IN_VEHICLE','IN_RAIL_VEHICLE','IN_ROAD_VEHICLE','IN_TWO_WHEELER_VEHICLE','IN_FOUR_WHEELER_VEHICLE','IN_CAR','IN_BUS','ON_BICYCLE','ON_FOOT','RUNNING','STILL','TILTING','UNKNOWN','WALKING') DEFAULT UNKNOWN,
-	"confidence"		INT(3) NOT NULL DEFAULT 0,
 	"timestampMs"		BIGINT NOT NULL,
-	"father_activity"	INT NULL,
-	"sub_activityID"	INT NULL DEFAULT 0,	--gIA NA XRISIMOPOIH8EI GIA SYGKEKRIMENO KEY OTAN 8ELEI NA KALESEI ENA ACTIVITY ISWS NA MHN XREIAZETAI
-	PRIMARY KEY ("userID","dataID","locationID","activityID","sub_activityID"),
+	
+	PRIMARY KEY ("userID","dataID","locationID","activityID"),
 	CONSTRAINT userIDtomapData
 	FOREIGN KEY ("userID") REFERENCES map_data("userID")
 	ON DELETE CASCADE ON UPDATE CASCADE,
@@ -88,13 +85,34 @@ CREATE TABLE activity(
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT locIDtoLoc
 	FOREIGN KEY (locationID) REFERENCES locations(locationID)
-	ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT arxikoActivityToActivity
-	FOREIGN KEY ("userID","dataID","locationID","father_activity") REFERENCES activity("userID","dataID","locationID","activityID")
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE activity_copy(
+CREATE TABLE "sub_activity"(
+	"userID"		TEXT NOT NULL,
+	"dataID"		INT NOT NULL,
+	"locationID"		INT NOT NULL,
+	"activityID"		INT NOT NULL,
+	"sub_activityID"		INT NOT NULL,	--gIA NA XRISIMOPOIH8EI GIA SYGKEKRIMENO KEY OTAN 8ELEI NA KALESEI ENA ACTIVITY
+	"activityType"		ENUM('IN_VEHICLE','IN_RAIL_VEHICLE','IN_ROAD_VEHICLE','IN_TWO_WHEELER_VEHICLE','IN_FOUR_WHEELER_VEHICLE','IN_CAR','IN_BUS','ON_BICYCLE','ON_FOOT','RUNNING','STILL','TILTING','UNKNOWN','WALKING') DEFAULT UNKNOWN,
+	"confidence"		INT(3) NOT NULL DEFAULT 0,
+	"timestampMs"		BIGINT NOT NULL,
+	PRIMARY KEY ("userID","dataID","locationID","activityID","sub_activityID"),
+	CONSTRAINT userIDtoActivity
+	FOREIGN KEY ("userID") REFERENCES activity("userID")
+	ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT dataIDtoActivity
+	FOREIGN KEY ("dataID") REFERENCES activity("dataID")
+	ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT locIDtoActivity
+	FOREIGN KEY ("locationID") REFERENCES activity("locationID")
+	ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT arxikoActivityID
+	FOREIGN KEY ("activityID") REFERENCES activity("activityID")
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "activity_copy"(
 	"userID"			TEXT NOT NULL,
 	"dataID"			INT NOT NULL,
 	"locationID"		INT NOT NULL,
@@ -108,7 +126,7 @@ CREATE TABLE activity_copy(
 
 
 
-CREATE TABLE history(
+CREATE TABLE "history"(
 	"username"	VARCHAR(12) NOT NULL,
 	"date"		DATETIME,
 	"executed"	ENUM('Yes', 'No'),
