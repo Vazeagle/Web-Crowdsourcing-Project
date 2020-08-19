@@ -1,84 +1,94 @@
-CREATE TABLE "user" (
-	"userID"	TEXT NOT NULL,
-	"username"	TEXT NOT NULL,
-	"password"	TEXT NOT NULL,
-	"email"		TEXT NOT NULL,
-	"reg_date" 	DATETIME NOT NULL,
-	"role"		ENUM('admin','user'),
-	"ecoscore"	INT DEFAULT 0
-	"verified_user" ENUM('yes','no'),
-	PRIMARY KEY("userID")
+CREATE TABLE user (
+	userID VARCHAR(255) NOT NULL,
+	username VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	reg_date DATETIME NOT NULL,
+	role ENUM('admin','user'),
+	verified_user ENUM('yes','no'),
+	PRIMARY KEY (userID)
 );
 
-CREATE TABLE "user_copy" (
-	"userID_copy"	TEXT NOT NULL,
-	"username_copy"	TEXT NOT NULL,
-	"password_copy"	TEXT NOT NULL,
-	"email_copy"	TEXT NOT NULL,
-	"reg_date_copy" DATETIME,
-	"role_copy"		ENUM('admin','user'),
-	"ecoscore"		INT DEFAULT 0
-	"verified_user_copy" ENUM('yes','no'),
+CREATE TABLE eco(
+	userID VARCHAR(255) NOT NULL,
+	upload_date DATE NOT NULL, --HMEROMHNIA APO timestampMs METAFRASMENH SE 
+	ecoscore INT DEFAULT 0,
+	PRIMARY KEY (userID,upload_date),
+	CONSTRAINT
+	FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
-CREATE TABLE "logs"(
-	"userID"		TEXT NOT NULL,
-	"logDate"		DATETIME NOT NULL,
+
+
+CREATE TABLE user_copy (
+	userID_copy	VARCHAR(255) NOT NULL,
+	username_copy	VARCHAR(255) NOT NULL,
+	password_copy	VARCHAR(255) NOT NULL,
+	email_copy	VARCHAR(255) NOT NULL,
+	reg_date_copy 	DATETIME,
+	role_copy	ENUM('admin','user'),
+	ecoscore	INT DEFAULT 0
+	verified_user_copy ENUM('yes','no'),
+);
+
+CREATE TABLE logs(
+	userID		VARCHAR(255) NOT NULL,
+	logDate		DATETIME NOT NULL,
 	CONSTRAINT usrlog
 	FOREIGN KEY("userID") REFERENCES user("userID")
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "upload_num"(
-	"userID"		TEXT NOT NULL,
-	"data_count"	INT	NOT NULL DEFAULT 0, --POSA ARXEIA EXEI ANEBASEI 8A AUXANETAI ME BASH TA ARXEIA POU ANEBAZEI
+CREATE TABLE upload_num(
+	userID		VARCHAR(255) NOT NULL,
+	data_count	INT NOT NULL DEFAULT 0, --POSA ARXEIA EXEI ANEBASEI 8A AUXANETAI ME BASH TA ARXEIA POU ANEBAZEI
 	CONSTRAINT upInfo
 	FOREIGN KEY("userID") REFERENCES user("userID")
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "map_data"(
-	"userID"		TEXT NOT NULL,
-	"dataID"		INT NOT NULL, -- ID TOU ARXEIOU POU ANEBAZEI  to dataID 8a auxanetai ana 1 ana upload
-	"uploadDate"	DATETIME NOT NULL, --8a ginetai update molis arxisei upload enos json
-	"fileName"		TEXT NOT NULL,
-	PRIMARY KEY ("userID","dataID"),
+CREATE TABLE map_data(
+	userID		VARCHAR(255) NOT NULL,
+	dataID		INT NOT NULL, -- ID TOU ARXEIOU POU ANEBAZEI  to dataID 8a auxanetai ana 1 ana upload
+	uploadDate	DATETIME NOT NULL, --8a ginetai update molis arxisei upload enos json
+	fileName		TEXT NOT NULL,
+	PRIMARY KEY (userID,dataID),
 	CONSTRAINT usrdata
-	FOREIGN KEY("userID") REFERENCES user("userID")
+	FOREIGN KEY(userID) REFERENCES user(userID)
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
-CREATE TABLE "locations"(
-	"userID"		TEXT NOT NULL,
-	"dataID"		INT NOT NULL, -- ID TOU ARXEIOU POU ANEBAZEI
-	"locationID"		INT NOT NULL, -- TO ID THS KA8E TOPOUESIAS POY YPARXEI MESA STO SYGKEKRIMENO ARXEIO POU ANEBAZEI
-	"timestampMs"		BIGINT NOT NULL,
-	"latitudeE7"		BIGINT NOT NULL,
-	"longitudeE7"		BIGINT NOT NULL,
-	"velocity"		INT NOT NULL,
-	"accuracy"		INT NOT NULL,
-	"heading"		INT NOT NULL,
-	PRIMARY KEY ("userID","dataID","locationID"),
+CREATE TABLE locations(
+	userID		VARCHAR(255) NOT NULL,
+	dataID		INT NOT NULL, -- ID TOU ARXEIOU POU ANEBAZEI
+	locationID		INT NOT NULL, -- TO ID THS KA8E TOPOUESIAS POY YPARXEI MESA STO SYGKEKRIMENO ARXEIO POU ANEBAZEI
+	timestampMs		BIGINT NOT NULL,
+	latitudeE7		BIGINT NOT NULL,
+	longitudeE7		BIGINT NOT NULL,
+	velocity		INT NOT NULL,
+	accuracy		INT NOT NULL,
+	heading		INT NOT NULL,
+	PRIMARY KEY (userID,dataID,locationID),
 	CONSTRAINT usrIDtoUser
-	FOREIGN KEY("userID") REFERENCES map_data("userID")
+	FOREIGN KEY(userID) REFERENCES map_data(userID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT file_data_ID
-	FOREIGN KEY ("dataID") REFERENCES map_data("dataID")
+	FOREIGN KEY (dataID) REFERENCES map_data(dataID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 );
 
 
-CREATE TABLE "activity"(
-	"userID"		TEXT NOT NULL,
-	"dataID"		INT NOT NULL,
-	"locationID"		INT NOT NULL,
-	"activityID"		INT NOT NULL,
-	"timestampMs"		BIGINT NOT NULL,
+CREATE TABLE activity(
+	userID		TEXT NOT NULL,
+	dataID		INT NOT NULL,
+	locationID		INT NOT NULL,
+	activityID		INT NOT NULL,
+	timestampMs		BIGINT NOT NULL,
 	
-	PRIMARY KEY ("userID","dataID","locationID","activityID"),
+	PRIMARY KEY (userID,dataID,locationID,activityID),
 	CONSTRAINT userIDtomapData
-	FOREIGN KEY ("userID") REFERENCES map_data("userID")
+	FOREIGN KEY (userID) REFERENCES map_data(userID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT dataIDtoMapdata
 	FOREIGN KEY (dataID) REFERENCES map_data(dataID)
@@ -88,49 +98,49 @@ CREATE TABLE "activity"(
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "sub_activity"(
-	"userID"		TEXT NOT NULL,
-	"dataID"		INT NOT NULL,
-	"locationID"		INT NOT NULL,
-	"activityID"		INT NOT NULL,
-	"sub_activityID"		INT NOT NULL,	--gIA NA XRISIMOPOIH8EI GIA SYGKEKRIMENO KEY OTAN 8ELEI NA KALESEI ENA ACTIVITY
-	"activityType"		ENUM('IN_VEHICLE','IN_RAIL_VEHICLE','IN_ROAD_VEHICLE','IN_TWO_WHEELER_VEHICLE','IN_FOUR_WHEELER_VEHICLE','IN_CAR','IN_BUS','ON_BICYCLE','ON_FOOT','RUNNING','STILL','TILTING','UNKNOWN','WALKING') DEFAULT UNKNOWN,
-	"confidence"		INT(3) NOT NULL DEFAULT 0,
-	"timestampMs"		BIGINT NOT NULL,
-	PRIMARY KEY ("userID","dataID","locationID","activityID","sub_activityID"),
+CREATE TABLE sub_activity(
+	userID		TEXT NOT NULL,
+	dataID		INT NOT NULL,
+	locationID		INT NOT NULL,
+	activityID		INT NOT NULL,
+	sub_activityID"		INT NOT NULL,	--gIA NA XRISIMOPOIH8EI GIA SYGKEKRIMENO KEY OTAN 8ELEI NA KALESEI ENA ACTIVITY
+	activityType		ENUM('IN_VEHICLE','IN_RAIL_VEHICLE','IN_ROAD_VEHICLE','IN_TWO_WHEELER_VEHICLE','IN_FOUR_WHEELER_VEHICLE','IN_CAR','IN_BUS','ON_BICYCLE','ON_FOOT','RUNNING','STILL','TILTING','UNKNOWN','WALKING') DEFAULT 'UNKNOWN',
+	confidence		INT(3) NOT NULL DEFAULT 0,
+	timestampMs		BIGINT NOT NULL,
+	PRIMARY KEY (userID,dataID,locationID,activityID,sub_activityID),
 	CONSTRAINT userIDtoActivity
-	FOREIGN KEY ("userID") REFERENCES activity("userID")
+	FOREIGN KEY (userID) REFERENCES activity(userID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT dataIDtoActivity
-	FOREIGN KEY ("dataID") REFERENCES activity("dataID")
+	FOREIGN KEY (dataID) REFERENCES activity(dataID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT locIDtoActivity
-	FOREIGN KEY ("locationID") REFERENCES activity("locationID")
+	FOREIGN KEY (locationID) REFERENCES activity(locationID)
 	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT arxikoActivityID
-	FOREIGN KEY ("activityID") REFERENCES activity("activityID")
+	FOREIGN KEY (activityID) REFERENCES activity(activityID)
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE "activity_copy"(
-	"userID"			TEXT NOT NULL,
-	"dataID"			INT NOT NULL,
-	"locationID"		INT NOT NULL,
-	"activityID"		INT NOT NULL,
-	"activity.type"		ENUM('IN_VEHICLE','ON_BICYCLE','ON_FOOT','RUNNING','STILL,TILTING','UNKNOWN','WALKING') DEFAULT UNKNOWN,
-	"confidence"		INT(3) NOT NULL DEFAULT 0,
-	"timestampMs"		BIGINT NOT NULL,
-	"father_activity"	INT NULL,
-	"uploadDate"		DATETIME NOT NULL
+CREATE TABLE activity_copy(
+	userID			TEXT NOT NULL,
+	dataID"			INT NOT NULL,
+	locationID		INT NOT NULL,
+	activityID		INT NOT NULL,
+	activity.type		ENUM('IN_VEHICLE','ON_BICYCLE','ON_FOOT','RUNNING','STILL,TILTING','UNKNOWN','WALKING') DEFAULT 'UNKNOWN',
+	confidence		INT(3) NOT NULL DEFAULT 0,
+	timestampMs		BIGINT NOT NULL,
+	father_activity	INT NULL,
+	uploadDate		DATETIME NOT NULL
 );
 
 
 
-CREATE TABLE "history"(
-	"username"	VARCHAR(12) NOT NULL,
-	"date"		DATETIME,
-	"executed"	ENUM('Yes', 'No'),
-	"type"		ENUM('insert', 'update', 'delete'),
-	"tableName"	VARCHAR(15)
+CREATE TABLE history(
+	username	VARCHAR(255) NOT NULL,
+	date		DATETIME,
+	executed	ENUM('Yes', 'No'),
+	type		ENUM('insert', 'update', 'delete'),
+	tableName	VARCHAR(15)
 );
 
