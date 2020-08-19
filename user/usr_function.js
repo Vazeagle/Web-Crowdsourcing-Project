@@ -4,8 +4,11 @@ L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=nQNGtBIpg
             attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
         }).addTo(map);
 
-function YearFunction() {
-    document.getElementById("Yeardbtn").classList.toggle("show");
+function SYearFunction() {
+    document.getElementById("SYeardbtn").classList.toggle("show");
+    }
+function EYearFunction() {
+    document.getElementById("EYeardbtn").classList.toggle("show");
     }
 function SMonthFunction() {
 document.getElementById("Smonthdbtn").classList.toggle("show");
