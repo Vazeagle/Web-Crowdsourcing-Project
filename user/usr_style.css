@@ -7,77 +7,34 @@ body {
   margin: 0;
 }
 
-nav {
-  float: left;
-  width: 15%;
-  height: 880px;
-  color: white; 
-  background: #191919;
-  padding: 20px;
+.pill-nav{
+  background-color: #171819;
+  /*color: white;*/
 }
 
-nav ul {
-  list-style-type: square;
-  padding: 0;
-}
-
-nav h1{
-  color: white;
-  position: center;
-}
-
-nav h3[id="name"]{
-  background-color: #2ecc71; 
-  border: 1px solid #2ecc71; 
-  color: white; 
-  padding: 10px 60px; 
-  border-radius: 24px;
-  transition: 0.25s;
+.pill-nav button {
+  background-color: #171819;
   margin: 20px auto;
-  text-align: center;
-}
-
-nav p{
-  border:0;
-  background: none;
-  display: block;
-  margin: 20px auto;
-  border: 2px solid #00FFFF;
+  border: 2px solid #171819 ;
   padding: 14px 10px;
   width: 220px;
   outline: none;
-  color: white;
-  border-radius: 24px;
-  transition: 0.25s;
-}
-
-nav p:hover{
-  width: 258px;
-  border-color: #2ecc71;
-
-}
-
-nav button[id="upload"]{
-  background-color: #191919; 
-  border: 1px solid #2ecc71; 
-  color: white; 
-  padding: 10px 60px; 
-  cursor: pointer; 
-  position: center;
-  border-radius: 24px;
-  transition: 0.25s;
-  margin: 20px auto;
+  display: inline-block;
   text-align: center;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 5px;
 }
 
-nav button[id="upload"]:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-nav button[id="upload"]:hover {
+.pill-nav button:hover {
   background-color: #2ecc71;
+  color: white;
+}
+
+.pill-nav button.active {
+  background-color: #2ecc71;
+  color: white;
 }
 
 #map {
@@ -146,7 +103,7 @@ article {
   width: 50%;
 }
 
-.column button[id="search"]{
+.column button[id="searchbtn"]{
   border:0;
   background: none;
   display: block;
@@ -160,13 +117,13 @@ article {
   transition: 0.25s;
 }
 
-.column button[id="search"]:after {
+.column button[id="searchbtn"]:after {
   content: "";
   clear: both;
   display: table;
 }
 
-.column button[id="search"]:hover {
+.column button[id="searchbtn"]:hover {
   background-color: #2ecc71;
 }
 
@@ -192,16 +149,88 @@ section:after {
   position: center;
 }
 
-/*ul li:nth-child(1){
-  list-style-image:url('gold.png');
-  }
-  ul li:nth-child(2){
-  list-style-image:url('silver.png');
-  }
-  ul li:nth-child(3){
-  list-style-image:url('bronze.png');
-  }*/
+aside {
+  float: left;
+  width: 15%;
+  height: 880px;
+  color: white; 
+  background: #191919;
+  padding: 20px;
+}
 
+aside ul {
+  list-style-type: square;
+  padding: 0;
+}
+
+aside h1{
+  color: white;
+  position: center;
+}
+
+aside h3[id="name"]{
+  background-color: #2ecc71; 
+  border: 1px solid #2ecc71; 
+  color: white; 
+  padding: 10px 60px; 
+  border-radius: 24px;
+  transition: 0.25s;
+  margin: 20px auto;
+  text-align: center;
+}
+
+aside p{
+  border:0;
+  background: none;
+  display: block;
+  margin: 20px auto;
+  border: 2px solid #00FFFF;
+  padding: 14px 10px;
+  width: 220px;
+  outline: none;
+  color: white;
+  border-radius: 24px;
+  transition: 0.25s;
+}
+
+aside p:hover{
+  width: 258px;
+  border-color: #2ecc71;
+
+}
+
+ol li:first-child{
+  list-style-image:url('goldsmall.png');
+  }
+ol li:first-child + li{
+  list-style-image:url('silversmall.png');
+  }
+ol li:first-child + li + li{
+  list-style-image:url('bronzesmall.png');
+  }
+
+aside button[id="upload"]{
+  background-color: #191919; 
+  border: 1px solid #2ecc71; 
+  color: white; 
+  padding: 10px 60px; 
+  cursor: pointer; 
+  position: center;
+  border-radius: 24px;
+  transition: 0.25s;
+  margin: 20px auto;
+  text-align: center;
+}
+
+aside button[id="upload"]:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+aside button[id="upload"]:hover {
+  background-color: #2ecc71;
+}
 
 footer {
     color: white;
