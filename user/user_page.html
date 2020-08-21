@@ -30,7 +30,15 @@
 			  <p>Ecological Score:</p>
 			  <p>Sign up Period Coverage:</p>
 			  <p>File last uploaded at:</p>
-			  <button id="upload">Upload .json File </button>
+			  <div class="upload-btn-wrapper">
+				<button id="upload">Upload .json File</button>
+				<input type="file" name="myfile" />
+			  </div>
+			  <!--<button id="upload">Upload .json File </button>
+			  <form id="upload" action="/action_page.php">
+				<input type="file" id="myFile" name="filename" >
+				<input type="submit">
+			  </form>-->
 			  <h3 id="lboard" position= center> <b>Leaderboard</b> </h3>
 						<ol id="lblist">
 							<li>Gold</li>
@@ -47,10 +55,16 @@
 		<div class="column">
 			<h2>This is your total activity.</h2>
 			<div  id='map'> </div>
+
+			<div id="searchload">
+				<div id="searchbar">10%</div>
+			  </div>
 	
 			<script src="usr_function.js"> </script>
 
 		</div>
+
+		
 		<div class="column">
 			<div id="searchtab" class="tabcontent">
 						<h3>Sort the map's results by:</h3>
@@ -218,7 +232,9 @@
 					</div>
 				</div>
 
-				<button id="searchbtn">Search </button>
+				<button id="searchbtn" onclick="move()">Search </button>
+
+				
 				
 				<script src="usr_function.js"> </script>
 
@@ -232,7 +248,18 @@
 
 
 <footer>
-  <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+		<h1><img src="panoptikon.png" alt="logo" width="70" height="49">Panoptikon</h1>
+		<p>Panoptikon is a crowdsourcing website, centered around the city of Patras and Rion.</p>
+		<p>Developed for a project in the Computer Engineering and Informatics Department in the University of Patras.</p>
+		<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+		<div class="btn-group">
+			<button>Home</button>
+			<button>Search</button>
+			<button >Profile</button>
+			<button >About</button>
+			<button >Log Out</button>
+		  </div>
+		
 </footer>
 
 </body>
