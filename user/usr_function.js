@@ -113,3 +113,25 @@ window.onclick = function(event) {
         }
     }
     }
+
+    var i = 0;
+function move() {
+    var sb = document.getElementById("searchbar");
+    sb.style.display = "block";
+  if (i == 0) {
+    i = 1;
+    var elem = document.getElementById("searchbar");
+    var width = 10;
+    var id = setInterval(frame, 10);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+      } else {
+        width++;
+        elem.style.width = width + "%";
+        elem.innerHTML = width  + "%";
+      }
+    }
+  }
+}
