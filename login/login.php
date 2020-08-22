@@ -35,6 +35,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         if($rowRes['username'] == $username && $rowRes['password'] == $password)
         {
             echo nl2br("Login successfull!\nConnected as: " $rowRes['role'] "\nWelcome " $rowRes['username']);
+            $mysqltime = date ('Y-m-d H:i:s', $phptime);
+            $sql2 = "INSERT INTO logs VALUES('$rowRes['userID']','$mysqltime')";
+            $result2 = mysql_query($sql2) or die("Failed to insert log data to database web_project".mysql_error());
+
         }
         else
         {
