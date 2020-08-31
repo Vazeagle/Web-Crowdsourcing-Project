@@ -42,49 +42,42 @@
                 $stmt_v2->bind_param('s', $token);
                 if($stmt_v2->execute())
                 {
-                    $message = "Your email address " . $user_info[1] . " has been verified successfully!";
-                    echo $message;
+                    $message = "Your email address '" . $user_info[1] . "' has been verified successfully!"; 
                     $stmt_v2->close();
-                    //λιγο html σε φαση πατα εδω για να κανει redirect στο login
-                    //header('location: index.php');
-                    exit(0);
                 }
                 else
                 {
-                    $message = "Your email address " . $user_info[1] . " failed to be verifyied!";
-                    echo $$message;
+                    $message = "Your email address " . $user_info[1] . " failed to be verifyied!";                   
                     $dbconnect->close();
-                    exit(0);
                 }
 
             }
             else 
             {
-                echo "User not found!";
+              $message = "User not found! Please try again!";
                 $dbconnect->close();
             }
         }
         else
         {
-            echo "No token provided!";
+          $message = "No token provided! Please try again!";
         }
 ?>
 
       <div id="postSU">
+      <?php $notify = $user_info[0] . ", " . $message;?>
 
-
-        <h3  ><?php echo $user_info[0] . ",\n" ; echo $message;?></h3>
+        <h3> <?php echo  $notify;?> </h3>
       <p>Please press the redirect link to login page. </p>
-      <button type="submit" onclick="redirect_to_login()" class="button button-block">Redirect to Login!</button>
+      <button type="submit" name = "redirect_login" class="button button-block">Redirect to Login!</button>
       
         </div>
-
-        <script>
-                function redirect_to_login()
-                {
-                    window.location.replace("http://localhost/test/index_li.php");
-                }
-        </script> 
+        <?php 
+          if (isset($_POST['redirect_login']))
+          {
+            header("location: http://localhost/test/index_li.php");
+          }
+        ?>
 
 </form>
 
