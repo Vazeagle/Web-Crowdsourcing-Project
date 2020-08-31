@@ -50,7 +50,7 @@ if (isset($_POST['login_btn']))
         $dbconnect = new mysqli("localhost","root","","web_project") or die("Couldn't connect to Database web_project") ;
 
         //login check
-        $login_query = "SELECT userID, password ,role FROM user WHERE email = ?";
+        $login_query = "SELECT userID, password, role, verified_user FROM user WHERE email = ?";
         //$login_query = "SELECT userID,username,role,verified_user FROM user WHERE email = ? AND password = ?";
 
         
@@ -73,27 +73,43 @@ if (isset($_POST['login_btn']))
             {
                 $_SESSION['userID']=$datar[0];
                 $_SESSION['role']=$datar[2];
+                $verification=$datar[3];
                 $res->free_result();
     
-                //$_SESSION['verified_user']=$datar[3];
-                //if(verified_user=="yes")
-                //{header("location: welcome.php");
-                //else{echo "Please verify your account";}
     
                 //insert se logs}
                 $dt = date ('Y-m-d H:i:s', time());
                 $insert_logs_query = "INSERT INTO logs(userID, logDate) VALUES (?, ?)";
                 $stmt3 = $dbconnect->prepare($insert_logs_query);
                 $stmt3->bind_param('ss',$_SESSION['userID'], $dt);
-                header("location: welcome.php");//ΑΛΛΑΓΗ ΣΕΛΙΔΑΣ ΣΕ WELCOME USER
+                
                 
                 if($stmt3->execute())   //AN ΓΙΝΕΙ ΣΩΣΤΑ ΤΟ INSERTION SYNDESOU
                 {
                     echo "Successful insertion to DataBase!" ."\n";
                     echo $password;
                     $stmt3->close(); 
+                    if($_SESSION['role']=="user")//AN EINAI ΧΡΗΣΤΗΣ ΚΑΙ ΟΧΙ ADMIN REDIRECT ΣΤΗΝ ΚΑΤΑΛΛΗΛΗ ΣΕΛΙΔΑ
+                    {
 
-                    header("location: welcome.php");    //ΑΛΛΑΓΗ ΣΕΛΙΔΑΣ ΣΕ WELCOME USER
+                        //ΚΑΝΕΙ ΕΛΕΓΧΟ ΓΙΑ ΤΟ ΑΝ Ο ΧΡΗΣΤΗΣ ΕΙΝΑΙ VERIFYIED-----------------
+                        if($verification=="yes")
+                        {
+                            header("location: http://localhost/test/user/user_page.php");//ΑΝ ΕΙΝΑΙ VERIFIED ΠΡΟΧΩΡΑ ΣΤΗΝ ΑΡΧΙΚΗ ΣΕΛΙΔΑ
+                        }
+                        elseif($verification=="no")
+                        {
+                            $dbconnect->close();
+                            header("location: http://localhost/test/user_verify/verify.php");//ΑΝ ΔΕΝ ΕΙΝΑΙ  VERIFYIED ΤΟΝ ΠΑΕΙ ΣΕ ΣΕΛΙΔΑ ΕΙΔΟΠΟΙΗΣΗΣ ΝΑ ΚΑΝΕΙ VERIFY
+                        }
+
+                       //ΑΛΛΑΓΗ ΣΕΛΙΔΑΣ ΣΕ WELCOME USER
+                    }
+                    elseif($_SESSION['role']=="admin")
+                    {
+                        header("location: http://localhost/test/admin/admin_page.php");//ΑΛΛΑΓΗ ΣΕΛΙΔΑΣ ΣΕ WELCOME USER
+                    }
+                    
         
                 }
                 else

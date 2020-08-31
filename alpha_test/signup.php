@@ -1,4 +1,5 @@
 <?php
+require_once 'send_email.php';
 session_start();
 //οταν παταει το signup
 if (isset($_POST['signup_btn']))
@@ -114,15 +115,17 @@ if($ok_flag == 1)
         $regDate =  date ('Y-m-d H:i:s', time());
         $role = "user";
         $verified_usr = "no";
+        $token = bin2hex(random_bytes(50));//needed for veryfying user
         
 
-        $sign_user_query = "INSERT INTO user(userID, username, fname, lname, password, iv, email, reg_date, role, verified_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+        $sign_user_query = "INSERT INTO user(userID, username, fname, lname, password, iv, email, token, reg_date, role, verified_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt2 = $dbconnect->prepare($sign_user_query);
-        $stmt2->bind_param('ssssssssss', $userID, $username, $fname, $lname, $hashed_password, $iv, $_SESSION['email'], $regDate, $role, $verified_usr);
+        $stmt2->bind_param('sssssssssss', $userID, $username, $fname, $lname, $hashed_password, $iv, $_SESSION['email'], $token, $regDate, $role, $verified_usr);
         if($stmt2->execute())// mysqli_stmt_execute($stmt);
         {
             echo "Successful Registration to DataBase!" ."\n";
-            $stmt2->close(); 
+            $stmt2->close();
+            sendVerificationEmail($email, $token); //ssl with xampp πρεπει να το φτιαξω αλλιως ερρορ "Enabling SSL with XAMPP".
 
         }
         else
