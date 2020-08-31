@@ -1,6 +1,8 @@
 <?php
 require_once 'send_email.php';
+//require_once(__DIR__.'\send_email.php')
 session_start();
+$_SESSION['msg'] = "";//variable to show later in login page is registration was successfull
 //οταν παταει το signup
 if (isset($_POST['signup_btn']))
 {
@@ -123,15 +125,27 @@ if($ok_flag == 1)
         $stmt2->bind_param('sssssssssss', $userID, $username, $fname, $lname, $hashed_password, $iv, $_SESSION['email'], $token, $regDate, $role, $verified_usr);
         if($stmt2->execute())// mysqli_stmt_execute($stmt);
         {
-            echo "Successful Registration to DataBase!" ."\n";
+            $_SESSION['msg'] = "Successful Registration to DataBase!" ."\n";
             $stmt2->close();
-            sendVerificationEmail($email, $token); //ssl with xampp πρεπει να το φτιαξω αλλιως ερρορ "Enabling SSL with XAMPP".
+            if(sendVerificationEmail($email, $token))//ssl with xampp πρεπει να "Enable SSL with XAMPP" ΚΑΙ ΝΑ ΕΙΝΑΙ ΚΛΕΙΣΤΟ ΤΟ ANTIVIRUS(AVAST).
+            {
+                $mail_s = "Verification e-mail sent successfully!";
+            }
+            else
+            {
+                $mail_s = "Verification e-mail could not be sent!\rPlease try to resend it after login!";
+            }
+
+            $_SESSION['msg'] = $_SESSION['msg'] . $mail_s;
+            header("location: http://localhost/test/index_li.php");
 
         }
         else
         {
-            echo "Registration to DataBase Failed!";
-            $stmt2->close(); 
+            $_SESSION['msg'] = "Registration to DataBase Failed!\r No verification email will be sent!";
+            $stmt2->close();
+            header("location: http://localhost/test/index.php");
+
         }
 
         exit();

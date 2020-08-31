@@ -1,4 +1,7 @@
-<?php require_once 'signup.php';?>
+<?php //require_once 'signup.php';
+require_once(__DIR__.'\signup.php')
+?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -12,6 +15,9 @@
   <h1><img src="panoptikon.png" alt="logo" width="60" height="42"></h1>
   <h1 >Welcome to Panoptikon!</h1>
   
+  <?php
+  echo $_SESSION['msg'];
+    ?>
        
   <div class="btn-group">
     <button id="su_button" onclick="signup_select()">Sign Up</button>

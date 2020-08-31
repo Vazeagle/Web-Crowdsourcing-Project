@@ -1,6 +1,6 @@
 <?php
-require_once './vendor/autoload.php';
-
+//require_once './vendor/autoload.php';
+require_once(__DIR__.'/vendor/autoload.php');
 // Create the Transport
 $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465,'ssl'))
     ->setUsername('panoptikon.web@gmail.com')
@@ -11,6 +11,7 @@ $mailer = new Swift_Mailer($transport);
 
 function sendVerificationEmail($userEmail, $token)
 {
+ try{
     global $mailer;
     $body = '<!DOCTYPE html>
     <html lang="en">
@@ -54,9 +55,10 @@ function sendVerificationEmail($userEmail, $token)
 
     if ($result > 0) {
         return true;
-        echo "Mail send.";
+        //echo "Mail send.";
     } else {
         return false;
-        echo "Mail failed.";
+        //echo "Mail failed.";
     }
+  }catch(Exception $e){return false;}
 }
