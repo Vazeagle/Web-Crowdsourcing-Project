@@ -5,9 +5,8 @@ function start() {
     var s = document.getElementById("su_button");
 
     x.style.display = "none";
-    y.style.display = "block";
     
-    s.style.background = '#2ecc71';
+    y.style.display = "block";
 
 }
 
@@ -37,3 +36,17 @@ function login_select() {
         s.style.background = '#191919';
     }
   }
+
+/*function openTab(evt, Tabname) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(Tabname).style.display = "block";
+            evt.currentTarget.className += " active";
+}

@@ -1,50 +1,142 @@
 <?php
 session_start();
-if($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    $username = mysql_real_escape_string($_POST['username']); //Για αντιμετωπιση mysql injection επιθεσεις καλύτερα απο απλο post
-    $password = mysql_real_escape_string($_POST['password']);
+//οταν παταει το signup
+if (isset($_POST['login_btn']))
+    {
 
-    //Αν δεν έχει εισαγει καποιο username ή password error popup
-    if(empty($username) && empty($passworrd))
-    {
-        $emptyerror = "Please insert username and password to login!";
-        echo $emptyerror;
-    }
-    elseif(empty($username) && (!empty($passworrd)))
-    {
-        $emptyerror = "Please insert a username to login!";
-        echo $emptyerror;
-    }
+    //$email_li = mysql_real_escape_string($_POST['e-mail']); //Για αντιμετωπιση mysql injection επιθεσεις καλύτερα απο απλο post
+    //$password_li = mysql_real_escape_string($_POST['password_li']);
+    $email_li = $_POST['e-mail']; //Για αντιμετωπιση mysql injection επιθεσεις καλύτερα απο απλο post
+    $password_li = $_POST['password_li'];
 
-    elseif((!empty($username)) && empty($passworrd))
+    //la8os email
+    if(empty($email_li || !filter_var($email_li, FILTER_VALIDATE_EMAIL)))
     {
-        $emptyerror = "Please insert a password to login!";
-        echo $emptyerror;
+        $email_error_li = "Please insert a valid email!\n";
+        echo $email_error_li; 
+        $email_flag_li = 0;
+    }
+    else
+    {
+        $email_flag_li = 1;
     }
 
-    else //Αν έχει καποιο username και password συμπληρωμένο
-    {
-        //mysql connection to database running by phpadmin for testing
-        mysql_connect("localhost","root","");
-        mysql_select("web_project");
-        $sql1 = "SELECT * FROM user WHERE username = '$username' AND password = '$password' ";
-        $result = mysql_query($sql1) or die("Failed to query database web_project".mysql_error());
 
-        $rowRes = mysql_fetch_array($result);
-        if($rowRes['username'] == $username && $rowRes['password'] == $password)
+    //la8os password
+    if(empty($password_li))
+    {
+        $password_error_li = "Please insert a password!";
+        echo $password_error_li;
+        $pass_flag_li = 0;
+    }
+    else
+    {
+        $pass_flag_li = 1;
+    }
+
+    //An ola ok katallhlo flag gia na prwxvrhsoyme
+    if ($email_flag_li == 1 && $pass_flag_li == 1)
+    {
+        $ok_flag_li = 1;
+    }
+    else
+    {
+        $ok_flag_li = 0;
+    }
+
+    if($ok_flag_li ==1) //AN ola kala sunexise me login
+    {
+        // Check connection
+        $dbconnect = new mysqli("localhost","root","","web_project") or die("Couldn't connect to Database web_project") ;
+
+        //login check
+        $login_query = "SELECT userID, password, role, verified_user FROM user WHERE email = ?";
+        //$login_query = "SELECT userID,username,role,verified_user FROM user WHERE email = ? AND password = ?";
+
+        
+        $stmt = $dbconnect->prepare($login_query);
+        $stmt->bind_param('s', $email_li);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $rownum = $res->num_rows;
+
+
+        if($rownum == 1)//an ena akribws match δλδ υπαρχει το email
         {
-            echo nl2br("Login successfull!\nConnected as: " $rowRes['role'] "\nWelcome " $rowRes['username']);
-            $mysqltime = date ('Y-m-d H:i:s', $phptime);
-            $sql2 = "INSERT INTO logs VALUES('$rowRes['userID']','$mysqltime')";
-            $result2 = mysql_query($sql2) or die("Failed to insert log data to database web_project".mysql_error());
+            $datar = $res->fetch_array(MYSQLI_NUM);
+            $res->free_result();
+            $stmt->close();
+            $pass_check=$datar[1];
+            $h_pass=password_verify($password_li,$pass_check);
+
+            if ($h_pass)//αν ειναι σωστος ο κωδικος
+            {
+                $_SESSION['userID']=$datar[0];
+                $role = $datar[2];
+                $verification=$datar[3];
+                $res->free_result();
+    
+    
+                //insert se logs}
+                date_default_timezone_set('Europe/Athens');
+                $dt = date ('Y-m-d H:i:s', time());
+                $insert_logs_query = "INSERT INTO logs(userID, logDate) VALUES (?, ?)";
+                $stmt3 = $dbconnect->prepare($insert_logs_query);
+                $stmt3->bind_param('ss',$_SESSION['userID'], $dt);
+                
+                
+                if($stmt3->execute())   //AN ΓΙΝΕΙ ΣΩΣΤΑ ΤΟ INSERTION SYNDESOU
+                {
+                    echo "Successful insertion to DataBase!" ."\n";
+                    echo $password;
+                    $stmt3->close(); 
+                    if($role=="user")//AN EINAI ΧΡΗΣΤΗΣ ΚΑΙ ΟΧΙ ADMIN REDIRECT ΣΤΗΝ ΚΑΤΑΛΛΗΛΗ ΣΕΛΙΔΑ
+                    {
+
+                        //ΚΑΝΕΙ ΕΛΕΓΧΟ ΓΙΑ ΤΟ ΑΝ Ο ΧΡΗΣΤΗΣ ΕΙΝΑΙ VERIFYIED-----------------
+                        if($verification=="yes")
+                        {
+                            header("location: http://localhost/web_project/user/user_page.php");//ΑΝ ΕΙΝΑΙ VERIFIED ΠΡΟΧΩΡΑ ΣΤΗΝ ΑΡΧΙΚΗ ΣΕΛΙΔΑ
+                        }
+                        elseif($verification=="no")
+                        {
+                            $dbconnect->close();
+                            header("location: http://localhost/web_project/user_verify/verify.php");//ΑΝ ΔΕΝ ΕΙΝΑΙ  VERIFYIED ΤΟΝ ΠΑΕΙ ΣΕ ΣΕΛΙΔΑ ΕΙΔΟΠΟΙΗΣΗΣ ΝΑ ΚΑΝΕΙ VERIFY
+                        }
+
+                       //ΑΛΛΑΓΗ ΣΕΛΙΔΑΣ ΣΕ WELCOME USER
+                    }
+                    elseif($role=="admin")
+                    {
+                        header("location: http://localhost/web_project/admin/admin_page.php");//ΑΛΛΑΓΗ ΣΕΛΙΔΑΣ ΣΕ WELCOME USER
+                    }
+                    
+        
+                }
+                else
+                {
+                    $dbconnect->close();
+                    echo "Insertion to DataBase Failed!";
+                    $stmt3->close();
+                }
+            }
+            else
+            {
+                $dbconnect->close();
+                $login_error="Invalid password!";
+                echo $login_error;
+            }
+           
+
 
         }
         else
         {
-            echo nl2br("Login Failed!\nWrong username or password!");
+            $dbconnect->close();
+            $login_error="Invalid user e-mail!";
+            echo $login_error;
         }
     }
-    
+
 }
 ?>
